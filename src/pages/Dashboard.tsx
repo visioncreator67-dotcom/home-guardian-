@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
-import { Button, Card, Select, Input, Popover, Switch } from '@/components/ui';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { Button, Card, Select, Popover, Switch } from '@/components/ui';
 
 interface CountryOption {
   value: string;
@@ -22,9 +20,7 @@ const supportedCountries: CountryOption[] = [
 
 export default function Dashboard() {
   const router = useRouter();
-  const { i18n } = useTranslation();
-  const location = useLocation();
-  const [country, setCountry] = useState<string>(i18n.language.split('-')[0]);
+  const [country, setCountry] = useState<string>('US');
   const [detectedCountry, setDetectedCountry] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState<boolean>(true);
   const [manualSelectionOpen, setManualSelectionOpen] = useState<boolean>(false);
@@ -93,24 +89,24 @@ export default function Dashboard() {
         <Card.Header>
           <div className="flex items-center justify-center">
             <div className="text-6xl mb-4">{countryOptions.find(o => o.value === country)?.flag}</div>
-            <h1 className="text-3xl font-bold text-center text-gray-800">{i18n.t('dashboard_title')}</h1>
+            <h1 className="text-3xl font-bold text-center text-gray-800">Home Dashboard</h1>
           </div>
         </Card.Header>
 
         <Card.Body>
           <div className="text-center mb-6">
-            <p className="text-lg text-gray-600">{i18n.t('your_ip_is')} {detectedCountry}</p>
+            <p className="text-lg text-gray-600">Your IP is from: {detectedCountry}</p>
             {isDetecting && (
               <div className="text-blue-500 text-sm">
-                {i18n.t('detecting_location')}...
+                Detecting your location...
               </div>
             )}
           </div>
 
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="text-2xl font-bold">{i18n.t('protection_status')}</h2>
-              <p className="text-lg text-gray-600">{i18n.t('protection_mode')}:</p>
+              <h2 className="text-2xl font-bold">Protection Status</h2>
+              <p className="text-lg text-gray-600">Protection Mode:</p>
             </div>
             <Switch
               checked={protectionMode === 'armed'}
@@ -121,16 +117,16 @@ export default function Dashboard() {
 
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="text-2xl font-bold">{i18n.t('device_count')}</h2>
-              <p className="text-lg text-gray-600">{i18n.t('connected_devices')}</p>
+              <h2 className="text-2xl font-bold">Device Count</h2>
+              <p className="text-lg text-gray-600">Connected Devices</p>
             </div>
             <div className="text-lg font-semibold text-red-600">+{deviceCount}</div>
           </div>
 
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h2 className="text-2xl font-bold">{i18n.t('emergency_numbers')}</h2>
-              <p className="text-lg text-gray-600">{i18n.t('local_emergency')}</p>
+              <h2 className="text-2xl font-bold">Emergency Numbers</h2>
+              <p className="text-lg text-gray-600">Local Emergency</p>
             </div>
             <div className="text-lg font-semibold text-red-600">{currentConfig?.emergencyNumber}</div>
           </div>
@@ -143,7 +139,7 @@ export default function Dashboard() {
               onClick={handleEmergencyClick}
               className="w-full md:w-1/2"
             >
-              {i18n.t('i_feel_unsafe')}
+              I Feel Unsafe
             </Button>
             <Button
               variant="outline"
@@ -151,7 +147,7 @@ export default function Dashboard() {
               onClick={handleSafeModeToggle}
               className="w-full md:w-1/2"
             >
-              {protectionMode === 'armed' ? i18n.t('disarm') : i18n.t('arm')}
+              {protectionMode === 'armed' ? 'Disarm' : 'Arm'}
             </Button>
           </div>
 
@@ -162,7 +158,7 @@ export default function Dashboard() {
               onClick={handleCheckIn}
               className="w-full md:w-1/2"
             >
-              {i18n.t('check_in')}
+              Check-in
             </Button>
             <Button
               variant="outline"
@@ -170,7 +166,7 @@ export default function Dashboard() {
               onClick={handleRecordAudio}
               className="w-full md:w-1/2"
             >
-              {i18n.t('record_audio')}
+              Record Audio
             </Button>
           </div>
         </Card.Body>
@@ -178,7 +174,7 @@ export default function Dashboard() {
         <Card.Footer>
           <div className="flex justify-between items-center">
             <div>
-              <p className="text-sm text-gray-500">{i18n.t('bottom_navigation')}</p>
+              <p className="text-sm text-gray-500">Bottom Navigation</p>
             </div>
             <div>
               <Button
@@ -187,7 +183,7 @@ export default function Dashboard() {
                 onClick={() => router.push('/devices')}
                 className="text-sm"
               >
-                {i18n.t('devices')}
+                Devices
               </Button>
               <Button
                 variant="outline"
@@ -195,7 +191,7 @@ export default function Dashboard() {
                 onClick={() => router.push('/contacts')}
                 className="text-sm"
               >
-                {i18n.t('contacts')}
+                Contacts
               </Button>
               <Button
                 variant="outline"
@@ -203,7 +199,7 @@ export default function Dashboard() {
                 onClick={() => router.push('/settings')}
                 className="text-sm"
               >
-                {i18n.t('settings')}
+                Settings
               </Button>
             </div>
           </div>

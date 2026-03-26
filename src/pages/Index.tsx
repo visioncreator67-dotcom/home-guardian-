@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
-import { Button, Card, Select, Input, Popover, Switch } from '@/components/ui';
-import { useTranslation } from 'react-i18next';
+import { Button, Card, Select, Popover } from '@/components/ui';
 
 interface CountryOption {
   value: string;
@@ -21,8 +20,7 @@ const supportedCountries: CountryOption[] = [
 
 export default function CountryDetectionScreen() {
   const router = useRouter();
-  const { i18n } = useTranslation();
-  const [country, setCountry] = useState<string>(i18n.language.split('-')[0]);
+  const [country, setCountry] = useState<string>('US');
   const [detectedCountry, setDetectedCountry] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState<boolean>(true);
   const [manualSelectionOpen, setManualSelectionOpen] = useState<boolean>(false);
@@ -67,22 +65,22 @@ export default function CountryDetectionScreen() {
         <Card.Header>
           <div className="flex items-center justify-center">
             <div className="text-6xl mb-4">{countryOptions.find(o => o.value === country)?.flag}</div>
-            <h1 className="text-3xl font-bold text-center text-gray-800">{i18n.t('welcome_back')}!</h1>
+            <h1 className="text-3xl font-bold text-center text-gray-800">Welcome Back!</h1>
           </div>
         </Card.Header>
 
         <Card.Body>
           <div className="text-center mb-6">
-            <p className="text-lg text-gray-600">{i18n.t('your_ip_is')} {detectedCountry}</p>
+            <p className="text-lg text-gray-600">Your IP is from: {detectedCountry}</p>
             {isDetecting && (
               <div className="text-blue-500 text-sm">
-                {i18n.t('detecting_location')}...
+                Detecting your location...
               </div>
             )}
           </div>
 
           <Select
-            placeholder={i18n.t('select_country')}
+            placeholder="Select your country"
             onChange={handleCountryChange}
             options={countryOptions}
             value={country}
@@ -96,12 +94,12 @@ export default function CountryDetectionScreen() {
             onClick={() => router.push('/dashboard')}
             className="w-full"
           >
-            {i18n.t('continue')}
+            Continue
           </Button>
 
           <Popover contentClass="bg-gray-100" placement="bottom" trigger={
             <Button variant="outline" size="sm" className="w-full mt-4 text-left">
-              {i18n.t('emergency_numbers')}
+              Emergency Numbers
             </Button>
           }>
             <Popover.Panel>
