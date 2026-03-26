@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
-import { Button, Card, Select, Popover } from '@/components/ui';
+import { Button, Card, Select, Popover } from '../components/ui';
 import { translations } from '../translations';
 
 interface CountryOption {

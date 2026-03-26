@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'react-router-dom';
-import { Button, Card, Input, Select, Table } from '@/components/ui';
+import { Button, Card, Input, Select, Table } from '../components/ui';
 
 interface Contact {
   id: string;

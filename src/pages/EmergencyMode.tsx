@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
-import { Button, Card, Input, Popover, Switch } from '@/components/ui';
+import { Button, Card, Input, Popover, Switch } from '../components/ui';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 

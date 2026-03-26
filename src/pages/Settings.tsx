@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
-import { Button, Card, Switch, Select, Input, Form, useTranslation } from '@/components/ui';
+import { Button, Card, Switch, Select, Input, Form, useTranslation } from '../components/ui';
 
 interface SettingsState {
   monitoringActive: boolean;
@@ -101,9 +101,7 @@ export default function Settings() {
                         onClick={() => handleSmartHomeRemove(integration)}
                         className="text-sm text-red-500"
                       >
-                        {
-                          i18n.t('remove_integration')
-                        }
+                        {i18n.t('remove_integration')}
                       </Button>
                     </div>
                   </div>

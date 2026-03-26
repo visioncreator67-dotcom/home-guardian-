@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
-import { Button, Card, Input, Select, Table } from '@/components/ui';
+import { Button, Card, Input, Select, Table } from '../components/ui';
 
 interface Device {
   id: string;
@@ -62,7 +62,7 @@ export default function Devices() {
                 <Table.Cell>{device.name}</Table.Cell>
                 <Table.Cell>{device.location}</Table.Cell>
                 <Table.Cell>
-                  <span className="text-{device.status === 'online' ? 'green' : 'red'}">{device.status}</span>
+                  <span className={`text-${device.status === 'online' ? 'green' : 'red'}`}>{device.status}</span>
                 </Table.Cell>
                 <Table.Cell>
                   <Button variant="outline" size="sm" onClick={() => handleDeleteDevice(device.id)}>
