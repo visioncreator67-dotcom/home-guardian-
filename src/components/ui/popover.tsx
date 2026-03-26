@@ -1,29 +1,55 @@
-import * as React from "react";
-import * as PopoverPrimitive from "@radix-ui/react-popover";
+import React, { useState, useRef, useEffect } from 'react';
 
-import { cn } from "@/lib/utils";
+interface PopoverProps {
+  children: React.ReactNode;
+  trigger: React.ReactNode;
+  placement?: 'top' | 'bottom' | 'left' | 'right';
+  contentClass?: string;
+}
 
-const Popover = PopoverPrimitive.Root;
+export const Popover: React.FC<PopoverProps> & {
+  Panel: React.FC<{ children: React.ReactNode }>;
+} = ({ children, trigger, placement = 'bottom', contentClass = '' }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const popoverRef = useRef<HTMLDivElement>(null);
 
-const PopoverTrigger = PopoverPrimitive.Trigger;
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-const PopoverContent = React.forwardRef<
-  React.ElementRef<typeof PopoverPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
->(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
-  <PopoverPrimitive.Portal>
-    <PopoverPrimitive.Content
-      ref={ref}
-      align={align}
-      sideOffset={sideOffset}
-      className={cn(
-        "z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-        className,
+  const placementStyles = {
+    top: 'bottom-full mb-2',
+    bottom: 'top-full mt-2',
+    left: 'right-full mr-2',
+    right: 'left-full ml-2',
+  };
+
+  return (
+    <div className="relative inline-block" ref={popoverRef}>
+      <div onClick={() => setIsOpen(!isOpen)}>{trigger}</div>
+      {isOpen && (
+        <div
+          className={`absolute z-50 ${placementStyles[placement]} ${contentClass}`}
+        >
+          {children}
+        </div>
       )}
-      {...props}
-    />
-  </PopoverPrimitive.Portal>
-));
-PopoverContent.displayName = PopoverPrimitive.Content.displayName;
+    </div>
+  );
+};
 
-export { Popover, PopoverTrigger, PopoverContent };
+const Panel: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  return (
+    <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-4 min-w-[200px]">
+      {children}
+    </div>
+  );
+};
+
+Popover.Panel = Panel;
