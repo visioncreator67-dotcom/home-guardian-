@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
 import { Button, Card, Select, Popover } from '@/components/ui';
+import { translations } from '../translations';
 
 interface CountryOption {
   value: string;
@@ -20,7 +21,7 @@ const supportedCountries: CountryOption[] = [
 
 export default function CountryDetectionScreen() {
   const router = useRouter();
-  const [country, setCountry] = useState<string>('US');
+  const [country, setCountry] = useState<string>('');
   const [detectedCountry, setDetectedCountry] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState<boolean>(true);
   const [manualSelectionOpen, setManualSelectionOpen] = useState<boolean>(false);
@@ -57,6 +58,10 @@ export default function CountryDetectionScreen() {
     setManualSelectionOpen(false);
   };
 
+  const t = (key: string) => {
+    return translations.en[key] || key;
+  };
+
   const currentConfig = countryConfig[country] || countryConfig['US'];
 
   return (
@@ -65,22 +70,22 @@ export default function CountryDetectionScreen() {
         <Card.Header>
           <div className="flex items-center justify-center">
             <div className="text-6xl mb-4">{countryOptions.find(o => o.value === country)?.flag}</div>
-            <h1 className="text-3xl font-bold text-center text-gray-800">Welcome Back!</h1>
+            <h1 className="text-3xl font-bold text-center text-gray-800">{t('welcome_back')}</h1>
           </div>
         </Card.Header>
 
         <Card.Body>
           <div className="text-center mb-6">
-            <p className="text-lg text-gray-600">Your IP is from: {detectedCountry}</p>
+            <p className="text-lg text-gray-600">{t('your_ip_is')} {detectedCountry}</p>
             {isDetecting && (
               <div className="text-blue-500 text-sm">
-                Detecting your location...
+                {t('detecting_location')}...
               </div>
             )}
           </div>
 
           <Select
-            placeholder="Select your country"
+            placeholder={t('select_country')}
             onChange={handleCountryChange}
             options={countryOptions}
             value={country}
@@ -94,12 +99,12 @@ export default function CountryDetectionScreen() {
             onClick={() => router.push('/dashboard')}
             className="w-full"
           >
-            Continue
+            {t('continue')}
           </Button>
 
           <Popover contentClass="bg-gray-100" placement="bottom" trigger={
             <Button variant="outline" size="sm" className="w-full mt-4 text-left">
-              Emergency Numbers
+              {t('emergency_numbers')}
             </Button>
           }>
             <Popover.Panel>
