@@ -22,7 +22,7 @@ export const translations = {
     emergency_activated: 'EMERGENCY ACTIVATED',
     police_called_stay_calm: 'Police called. Stay calm. Help is coming.',
     emergency_number_dialed: 'Emergency number dialed:',
-    return_to_dashboard': 'Return to Dashboard',
+    return_to_dashboard: 'Return to Dashboard',
     are_you_sure: 'Are you sure?',
     emergency_confirmation: 'Pressing this will call emergency services and notify your contacts.',
     call_emergency_services: 'Call Emergency Services',
