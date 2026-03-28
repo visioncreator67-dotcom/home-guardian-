@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
 import { Button, Card, Input, Popover, Switch } from '../components/ui';
-import { useTranslation } from 'react-i18next';
-import { useLocation } from 'react-router-dom';
+import { translations } from '../translations';
 
 interface CountryOption {
   value: string;
@@ -24,9 +23,7 @@ const supportedCountries: CountryOption[] = [
 
 export default function EmergencyMode() {
   const navigate = useNavigate();
-  const router = useLocation();
-  const { i18n } = useTranslation();
-  const [country, setCountry] = useState<string>(i18n.language.split('-')[0]);
+  const [country, setCountry] = useState<string>('US');
   const [detectedCountry, setDetectedCountry] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState<boolean>(true);
   const [manualSelectionOpen, setManualSelectionOpen] = useState<boolean>(false);
@@ -77,6 +74,10 @@ export default function EmergencyMode() {
     setManualSelectionOpen(false);
   };
 
+  const t = (key: string) => {
+    return translations.en[key] || key;
+  };
+
   const handleEmergencyClick = () => {
     setEmergencyInProgress(true);
     setTimeout(() => {
@@ -90,7 +91,7 @@ export default function EmergencyMode() {
         <Card.Header>
           <div className="flex items-center justify-center">
             <div className="text-6xl mb-4">{countryOptions.find(o => o.value === country)?.flag}</div>
-            <h1 className="text-3xl font-bold text-center text-gray-800">{i18n.t('emergency_mode')}</h1>
+            <h1 className="text-3xl font-bold text-center text-gray-800">{t('emergency_mode')}</h1>
           </div>
         </Card.Header>
 
@@ -99,9 +100,9 @@ export default function EmergencyMode() {
             <>
               <div className="text-center mb-6">
                 <div className="text-5xl font-bold text-red-600 mb-4">🚨</div>
-                <h2 className="text-2xl font-bold text-red-600">{i18n.t('emergency_activated')}</h2>
-                <p className="text-lg text-gray-600">{i18n.t('police_called_stay_calm')}</p>
-                <p className="text-sm text-gray-500 mt-2">{i18n.t('emergency_number_dialed')} {emergencyNumber}</p>
+                <h2 className="text-2xl font-bold text-red-600">{t('emergency_activated')}</h2>
+                <p className="text-lg text-gray-600">{t('police_called_stay_calm')}</p>
+                <p className="text-sm text-gray-500 mt-2">{t('emergency_number_dialed')} {emergencyNumber}</p>
               </div>
               <Button
                 variant="outline"
@@ -109,15 +110,15 @@ export default function EmergencyMode() {
                 onClick={() => navigate('/dashboard')}
                 className="w-full"
               >
-                {i18n.t('return_to_dashboard')}
+                {t('return_to_dashboard')}
               </Button>
             </>
           ) : (
             <>
               <div className="text-center mb-6">
                 <div className="text-5xl font-bold text-red-600 mb-4">🚨</div>
-                <h2 className="text-2xl font-bold text-red-600">{i18n.t('are_you_sure')}</h2>
-                <p className="text-lg text-gray-600">{i18n.t('emergency_confirmation')}</p>
+                <h2 className="text-2xl font-bold text-red-600">{t('are_you_sure')}</h2>
+                <p className="text-lg text-gray-600">{t('emergency_confirmation')}</p>
               </div>
               <Button
                 variant="solid"
@@ -126,7 +127,7 @@ export default function EmergencyMode() {
                 onClick={handleEmergencyClick}
                 className="w-full mb-4"
               >
-                {i18n.t('call_emergency_services')}
+                {t('call_emergency_services')}
               </Button>
               <Button
                 variant="outline"
@@ -134,7 +135,7 @@ export default function EmergencyMode() {
                 onClick={() => navigate('/dashboard')}
                 className="w-full"
               >
-                {i18n.t('cancel')}
+                {t('cancel')}
               </Button>
             </>
           )}

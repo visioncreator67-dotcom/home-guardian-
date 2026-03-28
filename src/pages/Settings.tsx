@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
-import { Button, Card, Switch, Select, Input, Form, useTranslation } from '../components/ui';
+import { Button, Card, Switch, Select, Input, Form } from '../components/ui';
+import { translations } from '../translations';
 
 interface SettingsState {
   monitoringActive: boolean;
@@ -29,9 +30,8 @@ const initialState: SettingsState = {
 
 export default function Settings() {
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
   const [settings, setSettings] = useState<SettingsState>(initialState);
-  const [country, setCountry] = useState<string>(i18n.language.split('-')[0]);
+  const [country, setCountry] = useState<string>('US');
   const [currentConfig] = useState(countryConfig[country] || countryConfig['US']);
 
   useEffect(() => {
@@ -49,6 +49,10 @@ export default function Settings() {
     };
     fetchCountry();
   }, []);
+
+  const t = (key: string) => {
+    return translations.en[key] || key;
+  };
 
   const handleMonitoringToggle = () => {
     setSettings(prev => ({ ...prev, monitoringActive: !prev.monitoringActive }));
@@ -74,7 +78,7 @@ export default function Settings() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
         <Card.Header>
-          <h2 className="text-2xl font-bold text-center text-gray-800">{i18n.t('settings_title')}</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-800">{t('settings_title')}</h2>
         </Card.Header>
 
         <Card.Body>
@@ -85,11 +89,11 @@ export default function Settings() {
                 onChange={handleMonitoringToggle}
                 className="h-4 w-10"
               />
-              <label className="text-sm text-gray-600">{i18n.t('24_7_monitoring')}</label>
+              <label className="text-sm text-gray-600">{t('24_7_monitoring')}</label>
             </div>
 
             <div className="mb-4">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">{i18n.t('smart_home_integrations')}</h3>
+              <h3 className="text-lg font-medium text-gray-700 mb-2">{t('smart_home_integrations')}</h3>
               <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
                 {settings.smartHomeIntegrations.map(integration => (
                   <div key={integration} className="bg-white rounded-lg shadow-sm p-2 mb-1 md:mb-0">
@@ -100,7 +104,7 @@ export default function Settings() {
                         onClick={() => handleSmartHomeRemove(integration)}
                         className="text-sm text-red-500"
                       >
-                        {i18n.t('remove_integration')}
+                        {t('remove_integration')}
                       </Button>
                     </div>
                   </div>
@@ -112,12 +116,12 @@ export default function Settings() {
                 onClick={() => handleSmartHomeAdd('IFTTT Webhook')}
                 className="w-full"
               >
-                {i18n.t('add_smart_home')}
+                {t('add_smart_home')}
               </Button>
             </div>
 
             <div className="mb-4">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">{i18n.t('notification_preferences')}</h3>
+              <h3 className="text-lg font-medium text-gray-700 mb-2">{t('notification_preferences')}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Switch
@@ -125,7 +129,7 @@ export default function Settings() {
                     onChange={() => setSettings(prev => ({ ...prev, 'notificationPreferences.email': !prev.notificationPreferences.email }))}
                     className="h-4 w-10"
                   />
-                  <label className="text-sm text-gray-600">{i18n.t('email_notifications')}</label>
+                  <label className="text-sm text-gray-600">{t('email_notifications')}</label>
                 </div>
                 <div>
                   <Switch
@@ -133,7 +137,7 @@ export default function Settings() {
                     onChange={() => setSettings(prev => ({ ...prev, 'notificationPreferences.sms': !prev.notificationPreferences.sms }))}
                     className="h-4 w-10"
                   />
-                  <label className="text-sm text-gray-600">{i18n.t('sms_notifications')}</label>
+                  <label className="text-sm text-gray-600">{t('sms_notifications')}</label>
                 </div>
                 <div>
                   <Switch
@@ -141,19 +145,19 @@ export default function Settings() {
                     onChange={() => setSettings(prev => ({ ...prev, 'notificationPreferences.push': !prev.notificationPreferences.push }))}
                     className="h-4 w-10"
                   />
-                  <label className="text-sm text-gray-600">{i18n.t('push_notifications')}</label>
+                  <label className="text-sm text-gray-600">{t('push_notifications')}</label>
                 </div>
               </div>
             </div>
 
             <div className="mb-4">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">{i18n.t('subscription_management')}</h3>
+              <h3 className="text-lg font-medium text-gray-700 mb-2">{t('subscription_management')}</h3>
               <Select
-                placeholder={i18n.t('select_plan')}
+                placeholder={t('select_plan')}
                 options={[
-                  { value: 'free', label: i18n.t('free_plan') },
-                  { value: 'pro', label: i18n.t('pro_plan') },
-                  { value: 'premium', label: i18n.t('premium_plan') }
+                  { value: 'free', label: t('free_plan') },
+                  { value: 'pro', label: t('pro_plan') },
+                  { value: 'premium', label: t('premium_plan') }
                 ]}
                 value={settings.subscriptionPlan}
                 onChange={handleSubscriptionChange}
@@ -162,12 +166,12 @@ export default function Settings() {
             </div>
 
             <div className="mb-4">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">{i18n.t('payment_methods')}</h3>
-              <Select                placeholder={i18n.t('select_payment')}
+              <h3 className="text-lg font-medium text-gray-700 mb-2">{t('payment_methods')}</h3>
+              <Select                placeholder={t('select_payment')}
                 options={[
-                  { value: 'credit_card', label: i18n.t('credit_card') },
-                  { value: 'paypal', label: i18n.t('paypal') },
-                  { value: 'bank_transfer', label: i18n.t('bank_transfer') }
+                  { value: 'credit_card', label: t('credit_card') },
+                  { value: 'paypal', label: t('paypal') },
+                  { value: 'bank_transfer', label: t('bank_transfer') }
                 ]}
                 value={settings.paymentMethod}
                 onChange={handlePaymentMethodChange}
