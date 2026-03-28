@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button, Card, Input, Select, Table } from '../components/ui';
 
 interface Contact {
@@ -16,7 +16,7 @@ const initialContacts: Contact[] = [
 ];
 
 export default function Contacts() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [contacts, setContacts] = useState(initialContacts);
   const [newContact, setNewContact] = useState({ name: '', phone: '', relationship: '', priority: 3 });
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
 import { Button, Card, Switch, Select, Input, Form, useTranslation } from '../components/ui';
 
@@ -28,7 +28,7 @@ const initialState: SettingsState = {
 };
 
 export default function Settings() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { i18n } = useTranslation();
   const [settings, setSettings] = useState<SettingsState>(initialState);
   const [country, setCountry] = useState<string>(i18n.language.split('-')[0]);
@@ -95,8 +95,7 @@ export default function Settings() {
                   <div key={integration} className="bg-white rounded-lg shadow-sm p-2 mb-1 md:mb-0">
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600">{integration}</span>
-                      <Button
-                        variant="outline"
+                      <Button                        variant="outline"
                         size="sm"
                         onClick={() => handleSmartHomeRemove(integration)}
                         className="text-sm text-red-500"
@@ -164,8 +163,7 @@ export default function Settings() {
 
             <div className="mb-4">
               <h3 className="text-lg font-medium text-gray-700 mb-2">{i18n.t('payment_methods')}</h3>
-              <Select
-                placeholder={i18n.t('select_payment')}
+              <Select                placeholder={i18n.t('select_payment')}
                 options={[
                   { value: 'credit_card', label: i18n.t('credit_card') },
                   { value: 'paypal', label: i18n.t('paypal') },

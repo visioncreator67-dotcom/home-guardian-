@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
 import { Button, Card, Input, Select, Table } from '../components/ui';
 
@@ -16,7 +16,7 @@ const initialDevices: Device[] = [
 ];
 
 export default function Devices() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [devices, setDevices] = useState(initialDevices);
 
   const handleAddDevice = () => {
