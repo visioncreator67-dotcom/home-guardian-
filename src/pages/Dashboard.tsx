@@ -1,7 +1,10 @@
+"use client";
+
 import { useEffect, useState } from 'react';
-import { useRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
 import { Button, Card, Select, Popover, Switch } from '../components/ui';
+import { translations } from '../translations';
 
 interface CountryOption {
   value: string;
@@ -19,7 +22,7 @@ const supportedCountries: CountryOption[] = [
 ];
 
 export default function Dashboard() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [country, setCountry] = useState<string>('US');
   const [detectedCountry, setDetectedCountry] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState<boolean>(true);
@@ -43,7 +46,7 @@ export default function Dashboard() {
         setCountry(data.country_code);
       } catch (error) {
         console.error('Error detecting country:', error);
-        setDetectedCountry('US'); // fallback
+        setDetectedCountry('US');
         setCountry('US');
       } finally {
         setIsDetecting(false);
@@ -68,7 +71,7 @@ export default function Dashboard() {
   };
 
   const handleEmergencyClick = () => {
-    router.push('/emergency');
+    navigate('/dashboard');
   };
 
   const handleSafeModeToggle = () => {
@@ -136,7 +139,7 @@ export default function Dashboard() {
               variant="solid"
               color="red"
               size="lg"
-              onClick={handleEmergencyClick}
+              onClick={() => navigate('/dashboard')}
               className="w-full md:w-1/2"
             >
               I Feel Unsafe
@@ -144,7 +147,7 @@ export default function Dashboard() {
             <Button
               variant="outline"
               size="lg"
-              onClick={handleSafeModeToggle}
+              onChange={handleSafeModeToggle}
               className="w-full md:w-1/2"
             >
               {protectionMode === 'armed' ? 'Disarm' : 'Arm'}
@@ -155,13 +158,12 @@ export default function Dashboard() {
             <Button
               variant="outline"
               size="lg"
-              onClick={handleCheckIn}
+              onClick={() => navigate('/devices')}
               className="w-full md:w-1/2"
             >
               Check-in
             </Button>
-            <Button
-              variant="outline"
+            <Button              variant="outline"
               size="lg"
               onClick={handleRecordAudio}
               className="w-full md:w-1/2"
@@ -180,7 +182,7 @@ export default function Dashboard() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => router.push('/devices')}
+                onClick={() => navigate('/devices')}
                 className="text-sm"
               >
                 Devices
@@ -188,7 +190,7 @@ export default function Dashboard() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => router.push('/contacts')}
+                onClick={() => navigate('/contacts')}
                 className="text-sm"
               >
                 Contacts
@@ -196,7 +198,7 @@ export default function Dashboard() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => router.push('/settings')}
+                onClick={() => navigate('/settings')}
                 className="text-sm"
               >
                 Settings

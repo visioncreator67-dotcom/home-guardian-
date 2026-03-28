@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useState } from 'react';
-import { useRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
 import { Button, Card, Input, Popover, Switch } from '../components/ui';
 import { useTranslation } from 'react-i18next';
@@ -21,9 +23,9 @@ const supportedCountries: CountryOption[] = [
 ];
 
 export default function EmergencyMode() {
-  const router = useRouter();
+  const navigate = useNavigate();
+  const router = useLocation();
   const { i18n } = useTranslation();
-  const location = useLocation();
   const [country, setCountry] = useState<string>(i18n.language.split('-')[0]);
   const [detectedCountry, setDetectedCountry] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState<boolean>(true);
@@ -47,7 +49,7 @@ export default function EmergencyMode() {
         setCountry(data.country_code);
       } catch (error) {
         console.error('Error detecting country:', error);
-        setDetectedCountry('US'); // fallback
+        setDetectedCountry('US');
         setCountry('US');
       } finally {
         setIsDetecting(false);
@@ -76,16 +78,9 @@ export default function EmergencyMode() {
   };
 
   const handleEmergencyClick = () => {
-    // Simulate emergency actions
     setEmergencyInProgress(true);
-    // In a real app, we would:
-    // 1. Get user location (GPS)
-    // 2. Auto-dial emergency number
-    // 3. Send SMS to emergency contacts
-    // 4. Start recording audio
-    // For now, we just show a message and then go back to dashboard after a delay
     setTimeout(() => {
-      router.push('/dashboard');
+      navigate('/dashboard');
     }, 5000);
   };
 
@@ -111,7 +106,7 @@ export default function EmergencyMode() {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={() => router.push('/dashboard')}
+                onClick={() => navigate('/dashboard')}
                 className="w-full"
               >
                 {i18n.t('return_to_dashboard')}
@@ -136,7 +131,7 @@ export default function EmergencyMode() {
               <Button
                 variant="outline"
                 size="lg"
-                onClick={() => router.push('/dashboard')}
+                onClick={() => navigate('/dashboard')}
                 className="w-full"
               >
                 {i18n.t('cancel')}
