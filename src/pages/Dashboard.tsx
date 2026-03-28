@@ -1,3 +1,4 @@
+<dyad-write path="src/pages/Dashboard.tsx" description="Fixed the emergency button in Dashboard to use proper Button component with correct styling and navigation">
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -71,7 +72,7 @@ export default function Dashboard() {
   };
 
   const handleEmergencyClick = () => {
-    navigate('/dashboard');
+    navigate('/emergency');
   };
 
   const handleSafeModeToggle = () => {
@@ -139,10 +140,10 @@ export default function Dashboard() {
               variant="solid"
               color="red"
               size="lg"
-              onClick={() => navigate('/dashboard')}
-              className="w-full md:w-1/2"
+              onClick={handleEmergencyClick}
+              className="w-full py-6 text-xl font-bold"
             >
-              I Feel Unsafe
+              I FEEL UNSAFE
             </Button>
             <Button
               variant="outline"
