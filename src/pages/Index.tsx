@@ -1,5 +1,7 @@
+"use client";
+
 import { useEffect, useState } from 'react';
-import { useRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
 import { Button, Card, Select, Popover } from '../components/ui';
 import { translations } from '../translations';
@@ -20,7 +22,7 @@ const supportedCountries: CountryOption[] = [
 ];
 
 export default function CountryDetectionScreen() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [country, setCountry] = useState<string>('');
   const [detectedCountry, setDetectedCountry] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState<boolean>(true);
@@ -36,7 +38,7 @@ export default function CountryDetectionScreen() {
         setCountry(data.country_code);
       } catch (error) {
         console.error('Error detecting country:', error);
-        setDetectedCountry('US'); // fallback
+        setDetectedCountry('US');
         setCountry('US');
       } finally {
         setIsDetecting(false);
@@ -96,7 +98,7 @@ export default function CountryDetectionScreen() {
             variant="solid"
             color="red"
             size="lg"
-            onClick={() => router.push('/dashboard')}
+            onClick={() => navigate('/dashboard')}
             className="w-full"
           >
             {t('continue')}
