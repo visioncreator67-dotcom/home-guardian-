@@ -1,4 +1,3 @@
-<dyad-write path="src/pages/Dashboard.tsx" description="Fixed the emergency button in Dashboard to use proper Button component with correct styling and navigation">
 "use client";
 
 import { useEffect, useState } from 'react';
@@ -27,16 +26,9 @@ export default function Dashboard() {
   const [country, setCountry] = useState<string>('US');
   const [detectedCountry, setDetectedCountry] = useState<string>('');
   const [isDetecting, setIsDetecting] = useState<boolean>(true);
-  const [manualSelectionOpen, setManualSelectionOpen] = useState<boolean>(false);
   const [countryOptions] = useState(supportedCountries);
-  const [protectionMode, setProtectionMode] = useState<'armed' | 'disarmed' | 'away'>('disarmed');
+  const [protectionMode, setProtectionMode] = useState<'armed' | 'disarmed'>('disarmed');
   const [deviceCount, setDeviceCount] = useState(0);
-  const [emergencyContacts, setEmergencyContacts] = useState([]);
-  const [securityDevices, setSecurityDevices] = useState([]);
-  const [userLocation, setUserLocation] = useState<UserLocation | null>(null);
-  const [audioRecording, setAudioRecording] = useState<MediaRecorder | null>(null);
-  const [subscriptionActive, setSubscriptionActive] = useState(false);
-  const [monitoringActive, setMonitoringActive] = useState(false);
 
   useEffect(() => {
     const fetchCountry = async () => {
@@ -58,33 +50,12 @@ export default function Dashboard() {
 
   const currentConfig = countryConfig[country] || countryConfig['US'];
 
-  const handleCountryChange = (value: string) => {
-    setCountry(value);
-  };
-
-  const handleManualSelect = () => {
-    setManualSelectionOpen(true);
-  };
-
-  const handleSelect = (value: string) => {
-    setCountry(value);
-    setManualSelectionOpen(false);
-  };
-
-  const handleEmergencyClick = () => {
-    navigate('/emergency');
-  };
-
   const handleSafeModeToggle = () => {
     setProtectionMode(protectionMode === 'armed' ? 'disarmed' : 'armed');
   };
 
-  const handleCheckIn = () => {
-    // Implement check-in functionality
-  };
-
-  const handleRecordAudio = () => {
-    // Implement audio recording
+  const handleEmergencyClick = () => {
+    navigate('/emergency');
   };
 
   return (
@@ -101,9 +72,7 @@ export default function Dashboard() {
           <div className="text-center mb-6">
             <p className="text-lg text-gray-600">Your IP is from: {detectedCountry}</p>
             {isDetecting && (
-              <div className="text-blue-500 text-sm">
-                Detecting your location...
-              </div>
+              <div className="text-blue-500 text-sm">Detecting your location...</div>
             )}
           </div>
 
@@ -135,78 +104,52 @@ export default function Dashboard() {
             <div className="text-lg font-semibold text-red-600">{currentConfig?.emergencyNumber}</div>
           </div>
 
-          <div className="flex flex-col md:flex-row justify-around items-center gap-4">
-            <Button
-              variant="solid"
-              color="red"
-              size="lg"
-              onClick={handleEmergencyClick}
-              className="w-full py-6 text-xl font-bold"
-            >
-              I FEEL UNSAFE
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              onChange={handleSafeModeToggle}
-              className="w-full md:w-1/2"
-            >
-              {protectionMode === 'armed' ? 'Disarm' : 'Arm'}
-            </Button>
-          </div>
+          <Button
+            variant="solid"
+            color="red"
+            size="lg"
+            onClick={handleEmergencyClick}
+            className="w-full py-6 text-xl font-bold mb-4"
+          >
+            I FEEL UNSAFE
+          </Button>
 
-          <div className="flex justify-between items-center mt-8">
+          <Button
+            variant="outline"
+            size="lg"
+            onClick={handleSafeModeToggle}
+            className="w-full"
+          >
+            {protectionMode === 'armed' ? 'Disarm' : 'Arm'}
+          </Button>
+
+          <div className="flex justify-between gap-4 mt-8">
             <Button
               variant="outline"
               size="lg"
               onClick={() => navigate('/devices')}
-              className="w-full md:w-1/2"
+              className="flex-1"
             >
-              Check-in
+              Devices
             </Button>
-            <Button              variant="outline"
+            <Button
+              variant="outline"
               size="lg"
-              onClick={handleRecordAudio}
-              className="w-full md:w-1/2"
+              onClick={() => navigate('/contacts')}
+              className="flex-1"
             >
-              Record Audio
+              Contacts
+            </Button>
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => navigate('/settings')}
+              className="flex-1"
+            >
+              Settings
             </Button>
           </div>
         </Card.Body>
-
-        <Card.Footer>
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm text-gray-500">Bottom Navigation</p>
-            </div>
-            <div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate('/devices')}
-                className="text-sm"
-              >
-                Devices
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate('/contacts')}
-                className="text-sm"
-              >
-                Contacts
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate('/settings')}
-                className="text-sm"
-              >
-                Settings
-              </Button>
-            </div>
-          </div>
-        </Card.Footer>
       </Card>
     </div>
   );
