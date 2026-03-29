@@ -6,25 +6,24 @@ export default function Settings() {
   const { 
     isVoiceActive, 
     setIsVoiceActive,
-    safeWord,
-    setSafeWord,
-    safeWordCount,
-    setSafeWordCount
+    codeWord,
+    setCodeWord,
+    repetitions,
+    setRepetitions,
+    testVoice
   } = useVoice();
-  const [confirmSafeWord, setConfirmSafeWord] = useState('');
+  const [confirmCodeWord, setConfirmCodeWord] = useState('');
 
   const handleTestVoice = () => {
-    if (!safeWord) {
-      alert('Please set a safe word first');
+    if (!codeWord) {
+      alert('Please set a code word first');
       return;
     }
-    alert(`Testing voice detection for: "${safeWord}" repeated ${safeWordCount} times\nSay: ${safeWord.repeat(safeWordCount)}`);
+    testVoice();
   };
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      {/* Existing settings content */}
-      
       <div className="mt-16">
         <h2 className="text-2xl font-bold text-center text-gray-800">Voice Command Settings</h2>
         
@@ -46,17 +45,17 @@ export default function Settings() {
             </label>
             <Input
               placeholder="Enter your secret code word"
-              value={safeWord}
-              onChange={(e) => setSafeWord(e.target.value)}
+              value={codeWord}
+              onChange={(e) => setCodeWord(e.target.value)}
               className="mb-2 w-full"
             />
             <Input
               placeholder="Confirm code word"
-              value={confirmSafeWord}
-              onChange={(e) => setConfirmSafeWord(e.target.value)}
+              value={confirmCodeWord}
+              onChange={(e) => setConfirmCodeWord(e.target.value)}
               className="w-full"
             />
-            {safeWord && confirmSafeWord && safeWord !== confirmSafeWord && (
+            {codeWord && confirmCodeWord && codeWord !== confirmCodeWord && (
               <p className="text-xs text-red-500 mt-1">Code words do not match</p>
             )}
           </div>
@@ -66,8 +65,8 @@ export default function Settings() {
               Number of Repetitions
             </label>
             <Select
-              value={safeWordCount}
-              onValueChange={(value) => setSafeWordCount(Number(value))}
+              value={repetitions}
+              onValueChange={(value) => setRepetitions(Number(value))}
               className="w-full"
             >
               {[2, 3].map(value => (
@@ -85,11 +84,11 @@ export default function Settings() {
           >
             Test Voice Detection          </Button>
           
-          {safeWord && (
+          {codeWord && (
             <div className="mt-4 p-3 bg-blue-50 rounded">
               <p className="text-sm text-blue-800">
-                Current code word: "<strong>{safeWord}</strong>" 
-                (say it <strong>{safeWordCount}</strong> times in a row to activate emergency)
+                Current code word: "<strong>{codeWord}</strong>" 
+                (say it <strong>{repetitions}</strong> times in a row to activate emergency)
               </p>
             </div>
           )}

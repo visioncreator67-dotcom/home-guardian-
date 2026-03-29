@@ -1,10 +1,11 @@
 import React from 'react';
+import { useVoice } from '../context/VoiceContext';
 
-interface VoiceStatusProps {
-  isListening: boolean;
-}
+interface VoiceStatusProps {}
 
-const VoiceStatus: React.FC<VoiceStatusProps> = ({ isListening }) => {
+const VoiceStatus: React.FC<VoiceStatusProps> = () => {
+  const { isListening } = useVoice();
+
   return (
     <div className="fixed top-4 right-4 p-2 z-50">
       <div className="relative">
