@@ -1,186 +1,29 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import countryConfig from '../config/countryConfig';
-import { Button, Card, Switch, Select, Input, Form } from '../components/ui';
-import { translations } from '../translations';
-
-interface SettingsState {
-  monitoringActive: boolean;
-  smartHomeIntegrations: string[];
-  notificationPreferences: {
-    email: boolean;
-    sms: boolean;
-    push: boolean;
-  };
-  subscriptionPlan: 'free' | 'pro' | 'premium';
-  paymentMethod: string;
-}
-
-const initialState: SettingsState = {
-  monitoringActive: false,
-  smartHomeIntegrations: [],
-  notificationPreferences: {
-    email: true,
-    sms: true,
-    push: true
-  },
-  subscriptionPlan: 'free',
-  paymentMethod: ''
-};
+import React, { useState } from 'react';
+import { Button, Switch } from '../components/ui';
+import VoiceCommand from '../components/ui/voice-command';
 
 export default function Settings() {
-  const navigate = useNavigate();
-  const [settings, setSettings] = useState<SettingsState>(initialState);
-  const [country, setCountry] = useState<string>('US');
-  const [currentConfig] = useState(countryConfig[country] || countryConfig['US']);
-
-  useEffect(() => {
-    const fetchCountry = async () => {
-      try {
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
-        setCountry(data.country_code);
-        setCurrentConfig(countryConfig[data.country_code] || countryConfig['US']);
-      } catch (error) {
-        console.error('Error detecting country:', error);
-        setCountry('US');
-        setCurrentConfig(countryConfig['US']);
-      }
-    };
-    fetchCountry();
-  }, []);
-
-  const t = (key: string) => {
-    return translations.en[key] || key;
-  };
-
-  const handleMonitoringToggle = () => {
-    setSettings(prev => ({ ...prev, monitoringActive: !prev.monitoringActive }));
-  };
-
-  const handleSmartHomeAdd = (integration: string) => {
-    setSettings(prev => ({ ...prev, smartHomeIntegrations: [...prev.smartHomeIntegrations, integration] }));
-  };
-
-  const handleSmartHomeRemove = (integration: string) => {
-    setSettings(prev => ({ ...prev, smartHomeIntegrations: prev.smartHomeIntegrations.filter(i => i !== integration) }));
-  };
-
-  const handleSubscriptionChange = (plan: 'free' | 'pro' | 'premium') => {
-    setSettings(prev => ({ ...prev, subscriptionPlan: plan }));
-  };
-
-  const handlePaymentMethodChange = (method: string) => {
-    setSettings(prev => ({ ...prev, paymentMethod: method }));
-  };
+  const [isVoiceActive, setIsVoiceActive] = useState<boolean>(false);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
-        <Card.Header>
-          <h2 className="text-2xl font-bold text-center text-gray-800">{t('settings_title')}</h2>
-        </Card.Header>
-
-        <Card.Body>
-          <Form>
-            <div className="mb-4">
-              <Switch
-                checked={settings.monitoringActive}
-                onChange={handleMonitoringToggle}
-                className="h-4 w-10"
-              />
-              <label className="text-sm text-gray-600">{t('24_7_monitoring')}</label>
-            </div>
-
-            <div className="mb-4">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">{t('smart_home_integrations')}</h3>
-              <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
-                {settings.smartHomeIntegrations.map(integration => (
-                  <div key={integration} className="bg-white rounded-lg shadow-sm p-2 mb-1 md:mb-0">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">{integration}</span>
-                      <Button                        variant="outline"
-                        size="sm"
-                        onClick={() => handleSmartHomeRemove(integration)}
-                        className="text-sm text-red-500"
-                      >
-                        {t('remove_integration')}
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleSmartHomeAdd('IFTTT Webhook')}
-                className="w-full"
-              >
-                {t('add_smart_home')}
-              </Button>
-            </div>
-
-            <div className="mb-4">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">{t('notification_preferences')}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Switch
-                    checked={settings.notificationPreferences.email}
-                    onChange={() => setSettings(prev => ({ ...prev, 'notificationPreferences.email': !prev.notificationPreferences.email }))}
-                    className="h-4 w-10"
-                  />
-                  <label className="text-sm text-gray-600">{t('email_notifications')}</label>
-                </div>
-                <div>
-                  <Switch
-                    checked={settings.notificationPreferences.sms}
-                    onChange={() => setSettings(prev => ({ ...prev, 'notificationPreferences.sms': !prev.notificationPreferences.sms }))}
-                    className="h-4 w-10"
-                  />
-                  <label className="text-sm text-gray-600">{t('sms_notifications')}</label>
-                </div>
-                <div>
-                  <Switch
-                    checked={settings.notificationPreferences.push}
-                    onChange={() => setSettings(prev => ({ ...prev, 'notificationPreferences.push': !prev.notificationPreferences.push }))}
-                    className="h-4 w-10"
-                  />
-                  <label className="text-sm text-gray-600">{t('push_notifications')}</label>
-                </div>
-              </div>
-            </div>
-
-            <div className="mb-4">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">{t('subscription_management')}</h3>
-              <Select
-                placeholder={t('select_plan')}
-                options={[
-                  { value: 'free', label: t('free_plan') },
-                  { value: 'pro', label: t('pro_plan') },
-                  { value: 'premium', label: t('premium_plan') }
-                ]}
-                value={settings.subscriptionPlan}
-                onChange={handleSubscriptionChange}
-                className="w-full"
-              />
-            </div>
-
-            <div className="mb-4">
-              <h3 className="text-lg font-medium text-gray-700 mb-2">{t('payment_methods')}</h3>
-              <Select                placeholder={t('select_payment')}
-                options={[
-                  { value: 'credit_card', label: t('credit_card') },
-                  { value: 'paypal', label: t('paypal') },
-                  { value: 'bank_transfer', label: t('bank_transfer') }
-                ]}
-                value={settings.paymentMethod}
-                onChange={handlePaymentMethodChange}
-                className="w-full"
-              />
-            </div>
-          </Form>
-        </Card.Body>
-      </Card>
+      {/* Existing settings content */}
+      
+      <div className="mt-16">
+        <h2 className="text-2xl font-bold text-center text-gray-800">Voice Command Settings</h2>
+        <Switch
+          checked={isVoiceActive}
+          onChange={setIsVoiceActive}
+          className="w-48 h-16 mb-4"
+        />
+        <p className="text-center text-gray-600">
+          Enable voice commands to trigger emergency mode with phrases like "Hey Guardian, I need help"
+        </p>
+        <VoiceCommand 
+          isVoiceActive={isVoiceActive} 
+          setIsVoiceActive={setIsVoiceActive}
+        />
+      </div>
     </div>
   );
 }
