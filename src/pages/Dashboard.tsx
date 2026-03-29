@@ -48,7 +48,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <VoiceListener />
-      <VoiceStatus />
+      <VoiceStatus isListening={isListening} />
       <Card className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
         <Card.Header>
           <div className="text-center">
@@ -70,8 +70,7 @@ export default function Dashboard() {
               <h2 className="text-xl font-bold">Protection Status</h2>
               <p className="text-gray-600">Protection Mode:</p>
             </div>
-            <Switch
-              checked={protectionMode === 'armed'}
+            <Switch              checked={protectionMode === 'armed'}
               onChange={handleSafeModeToggle}
             />
           </div>
@@ -126,7 +125,8 @@ export default function Dashboard() {
               className="flex-1"
             >
               👥 Contacts            </Button>
-            <Button              variant="outline"
+            <Button
+              variant="outline"
               size="md"
               onClick={() => navigate('/settings')}
               className="flex-1"
