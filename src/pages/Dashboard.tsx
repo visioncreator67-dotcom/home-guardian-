@@ -48,7 +48,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <VoiceListener />
-      <VoiceStatus isListening={isListening} />
+      <VoiceStatus />
       <Card className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
         <Card.Header>
           <div className="text-center">
@@ -118,8 +118,7 @@ export default function Dashboard() {
               onClick={() => navigate('/devices')}
               className="flex-1"
             >
-              📱 Devices
-            </Button>
+              📱 Devices            </Button>
             <Button
               variant="outline"
               size="md"
@@ -127,8 +126,7 @@ export default function Dashboard() {
               className="flex-1"
             >
               👥 Contacts            </Button>
-            <Button
-              variant="outline"
+            <Button              variant="outline"
               size="md"
               onClick={() => navigate('/settings')}
               className="flex-1"
