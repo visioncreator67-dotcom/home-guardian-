@@ -1,11 +1,17 @@
 import { useState } from 'react';
-import { VoiceStatus } from './components/ui';
+import { VoiceProvider } from './context/VoiceContext';
+import VoiceListener from './components/ui/voice-listener';
+import VoiceStatus from './components/ui/voice-status';
+import { useVoice } from './context/VoiceContext';
 
 export default function App() {
-  const [isVoiceActive, setIsVoiceActive] = useState<boolean>(false);
+  const { isVoiceActive, isListening } = useVoice();
 
   return (
-    <VoiceStatus isListening={isVoiceActive} />
-    {/* Existing App content */}
+    <VoiceProvider>
+      <VoiceListener />
+      <VoiceStatus isListening={isListening} />
+      {/* Existing App content */}
+    </VoiceProvider>
   );
 }
