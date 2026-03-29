@@ -1,17 +1,36 @@
-import { useState } from 'react';
-import { VoiceProvider } from './context/VoiceContext';
-import VoiceListener from './components/ui/voice-listener';
-import VoiceStatus from './components/ui/voice-status';
-import { useVoice } from './context/VoiceContext';
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Index from "./pages/Index";
+import Dashboard from "./pages/Dashboard";
+import EmergencyMode from "./pages/EmergencyMode";
+import Devices from "./pages/Devices";
+import Contacts from "./pages/Contacts";
+import Settings from "./pages/Settings";
+import NotFound from "./pages/NotFound";
 
-export default function App() {
-  const { isVoiceActive, isListening } = useVoice();
+const queryClient = new QueryClient();
 
-  return (
-    <VoiceProvider>
-      <VoiceListener />
-      <VoiceStatus isListening={isListening} />
-      {/* Existing App content */}
-    </VoiceProvider>
-  );
-}
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/emergency" element={<EmergencyMode />} />
+          <Route path="/devices" element={<Devices />} />
+          <Route path="/contacts" element={<Contacts />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
+
+export default App;

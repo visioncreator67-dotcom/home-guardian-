@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import countryConfig from '../config/countryConfig';
 import { Button, Card, Switch } from '../components/ui';
+import { useVoice } from '../context/VoiceContext';
+import VoiceStatus from '../components/ui/voice-status';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -12,6 +14,7 @@ export default function Dashboard() {
   const [isDetecting, setIsDetecting] = useState<boolean>(true);
   const [protectionMode, setProtectionMode] = useState<'armed' | 'disarmed'>('disarmed');
   const [deviceCount, setDeviceCount] = useState(0);
+  const { isListening } = useVoice();
 
   useEffect(() => {
     const fetchCountry = async () => {
@@ -43,6 +46,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <VoiceStatus isListening={isListening} />
       <Card className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
         <Card.Header>
           <div className="text-center">
@@ -120,8 +124,7 @@ export default function Dashboard() {
               onClick={() => navigate('/contacts')}
               className="flex-1"
             >
-              👥 Contacts
-            </Button>
+              👥 Contacts            </Button>
             <Button
               variant="outline"
               size="md"
