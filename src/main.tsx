@@ -1,9 +1,10 @@
-import { createRoot } from "react-dom/client";
-import App from "./App.tsx";
-import "./globals.css";
-import { VoiceProvider } from "./context/VoiceContext";
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './globals.css';
+import { VoiceProvider } from './context/VoiceContext';
 
-createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <VoiceProvider>
       <App />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useVoice } from '../../context/VoiceContext';
+import { useVoice } from '../context/VoiceContext'; // Corrected path
 
 export const VoiceStatus = ({ isListening }) => {
   const { isVoiceActive } = useVoice();
