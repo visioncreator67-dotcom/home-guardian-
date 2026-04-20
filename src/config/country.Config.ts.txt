@@ -1,0 +1,8 @@
+export default {
+  ZA: { emergencyNumber: '10111' },
+  US: { emergencyNumber: '911' },
+  GB: { emergencyNumber: '999' },
+  CA: { emergencyNumber: '911' },
+  AU: { emergencyNumber: '000' },
+  DE: { emergencyNumber: '112' },
+};

@@ -1,0 +1,40 @@
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import countryConfig from '../config/countryConfig';
+
+export default function Index() {
+  const navigate = useNavigate();
+  const [country, setCountry] = useState('ZA');
+  const [detectedCountry, setDetectedCountry] = useState('');
+
+  useEffect(() => {
+    fetch('https://ipapi.co/json/')
+      .then(res => res.json())
+      .then(data => {
+        setDetectedCountry(data.country_code);
+        setCountry(data.country_code);
+      })
+      .catch(() => setDetectedCountry('ZA'));
+  }, []);
+
+  const currentConfig = countryConfig[country] || countryConfig['ZA'];
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full">
+        <div className="text-6xl mb-4 text-center">🇿🇦</div>
+        <h1 className="text-3xl font-bold text-center text-gray-800">Welcome back!</h1>
+        <p className="text-center text-gray-600 mt-2">Your IP is from: {detectedCountry}</p>
+        <div className="mt-4 text-center text-sm text-gray-500">
+          Emergency number: <span className="font-bold text-red-600">{currentConfig?.emergencyNumber || '10111'}</span>
+        </div>
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="mt-6 w-full bg-red-600 text-white py-3 rounded-lg font-bold hover:bg-red-700 transition"
+        >
+          Continue to App
+        </button>
+      </div>
+    </div>
+  );
+}

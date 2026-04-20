@@ -4,5 +4,3 @@ export { Select } from './Select';
 export { Popover } from './Popover';
 export { Switch } from './Switch';
 export { Input } from './Input';
-export { Form } from './Form';
-export { Table } from './Table';

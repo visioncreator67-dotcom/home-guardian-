@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Switch, Input, Select } from '../components/ui';
 import { useVoice } from '../context/VoiceContext';
 
 export default function Settings() {
@@ -8,7 +7,6 @@ export default function Settings() {
   const [localCodeWord, setLocalCodeWord] = useState('');
   const [localRepetitions, setLocalRepetitions] = useState(3);
 
-  // Load saved settings from localStorage on mount
   useEffect(() => {
     const savedCodeWord = localStorage.getItem('voiceCodeWord');
     const savedRepetitions = localStorage.getItem('voiceRepetitions');
@@ -16,7 +14,6 @@ export default function Settings() {
     if (savedRepetitions) setLocalRepetitions(Number(savedRepetitions));
   }, []);
 
-  // When voice is activated, apply the saved settings to the context
   useEffect(() => {
     if (isVoiceActive && localCodeWord) {
       setCodeWord(localCodeWord);
@@ -45,14 +42,19 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Voice Command Settings</h2>
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-6">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Settings</h2>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="flex justify-between items-center">
             <span className="text-gray-700">Voice Activation</span>
-            <Switch checked={isVoiceActive} onChange={toggleVoice} />
+            <button
+              onClick={toggleVoice}
+              className={`w-12 h-6 rounded-full transition-colors ${isVoiceActive ? 'bg-red-600' : 'bg-gray-300'}`}
+            >
+              <span className={`block w-5 h-5 bg-white rounded-full transition-transform ${isVoiceActive ? 'translate-x-6' : 'translate-x-1'}`} />
+            </button>
           </div>
           <p className="text-sm text-gray-500 text-center">
             {isVoiceActive ? 'Voice Activation: ON' : 'Voice Activation: OFF'}
@@ -61,18 +63,20 @@ export default function Settings() {
           {isVoiceActive && (
             <>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Secret Code Word</label>
-                <Input
-                  placeholder="Enter your secret code word"
+                <label className="block text-sm font-medium text-gray-700 mb-1">Secret Code Word</label>
+                <input
+                  type="text"
                   value={localCodeWord}
                   onChange={(e) => setLocalCodeWord(e.target.value)}
-                  className="mb-2 w-full"
+                  placeholder="e.g., pineapple"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2"
                 />
-                <Input
-                  placeholder="Confirm code word"
+                <input
+                  type="text"
                   value={confirmCodeWord}
                   onChange={(e) => setConfirmCodeWord(e.target.value)}
-                  className="w-full"
+                  placeholder="Confirm code word"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
                 />
                 {localCodeWord && confirmCodeWord && localCodeWord !== confirmCodeWord && (
                   <p className="text-xs text-red-500 mt-1">Code words do not match</p>
@@ -80,34 +84,32 @@ export default function Settings() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Number of Repetitions</label>
-                <Select
+                <label className="block text-sm font-medium text-gray-700 mb-1">Number of Repetitions</label>
+                <select
                   value={localRepetitions}
                   onChange={(e) => setLocalRepetitions(Number(e.target.value))}
-                  className="w-full"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
                 >
                   <option value={2}>2 times</option>
                   <option value={3}>3 times</option>
-                </Select>
+                </select>
               </div>
 
-              <Button
-                variant="outline"
+              <button
                 onClick={handleTestVoice}
-                className="w-full mt-2"
                 disabled={!localCodeWord}
+                className="w-full bg-gray-200 text-gray-800 py-2 rounded-lg mt-2 disabled:opacity-50"
               >
                 Test Voice Detection
-              </Button>
+              </button>
 
-              <Button
-                variant="solid"
+              <button
                 onClick={handleSaveSettings}
-                className="w-full mt-2"
                 disabled={!localCodeWord || localCodeWord !== confirmCodeWord}
+                className="w-full bg-blue-600 text-white py-2 rounded-lg disabled:opacity-50"
               >
                 Save Settings
-              </Button>
+              </button>
             </>
           )}
 

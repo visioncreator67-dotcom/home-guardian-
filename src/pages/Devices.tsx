@@ -1,81 +1,124 @@
-"use client";
-
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import countryConfig from '../config/countryConfig';
-import { Button, Card, Input, Select, Table } from '../components/ui';
 
 interface Device {
   id: string;
   name: string;
-  location: 'Front Door' | 'Back Door' | 'Bedroom' | 'Living Room';
+  location: string;
   status: 'online' | 'offline';
 }
 
-const initialDevices: Device[] = [
-  { id: '1', name: 'Main Camera', location: 'Front Door', status: 'online' },
-  { id: '2', name: 'Door Sensor', location: 'Back Door', status: 'offline' }
-];
+const LOCATIONS = ['Front Door', 'Back Door', 'Bedroom', 'Living Room'];
 
 export default function Devices() {
   const navigate = useNavigate();
-  const [devices, setDevices] = useState(initialDevices);
+  const [devices, setDevices] = useState<Device[]>([]);
+  const [newDeviceName, setNewDeviceName] = useState('');
+  const [newDeviceLocation, setNewDeviceLocation] = useState(LOCATIONS[0]);
 
-  const handleAddDevice = () => {
-    // In real app: generate QR code and handle pairing
+  // Load devices from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('securityDevices');
+    if (saved) setDevices(JSON.parse(saved));
+  }, []);
+
+  // Save devices whenever they change
+  useEffect(() => {
+    localStorage.setItem('securityDevices', JSON.stringify(devices));
+  }, [devices]);
+
+  const addDevice = () => {
+    if (!newDeviceName.trim()) return;
     const newDevice: Device = {
       id: Date.now().toString(),
-      name: 'New Device',
-      location: 'Front Door',
-      status: 'online'
+      name: newDeviceName.trim(),
+      location: newDeviceLocation,
+      status: 'offline',
     };
     setDevices([...devices, newDevice]);
+    setNewDeviceName('');
   };
 
-  const handleAssignLocation = (deviceId: string, location: Device['location']) => {
-    setDevices(devices.map(d => d.id === deviceId ? { ...d, location } : d));
+  const toggleDeviceStatus = (id: string) => {
+    setDevices(devices.map(dev =>
+      dev.id === id ? { ...dev, status: dev.status === 'online' ? 'offline' : 'online' } : dev
+    ));
   };
 
-  const handleDeleteDevice = (deviceId: string) => {
-    setDevices(devices.filter(d => d.id !== deviceId));
+  const deleteDevice = (id: string) => {
+    setDevices(devices.filter(dev => dev.id !== id));
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
-        <h2 className="text-2xl font-bold text-center text-gray-800">Security Devices</h2>
-        <div className="mb-6">
-          <Button variant="outline" size="lg" onClick={handleAddDevice}>
-            Add Device (QR Code)
-          </Button>
+    <div className="min-h-screen bg-gray-50 p-4">
+      <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-6">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Security Devices</h2>
+
+        {/* Add Device Form */}
+        <div className="mb-6 border-b pb-4">
+          <h3 className="text-lg font-semibold mb-2">Add New Device</h3>
+          <input
+            type="text"
+            placeholder="Device name (e.g., Kitchen Sensor)"
+            value={newDeviceName}
+            onChange={(e) => setNewDeviceName(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2"
+          />
+          <select
+            value={newDeviceLocation}
+            onChange={(e) => setNewDeviceLocation(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2"
+          >
+            {LOCATIONS.map(loc => <option key={loc} value={loc}>{loc}</option>)}
+          </select>
+          <button
+            onClick={addDevice}
+            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+          >
+            ➕ Add Device
+          </button>
         </div>
-        <Table>
-          <Table.Header>
-            <Table.Row>
-              <Table.Cell>Device</Table.Cell>
-              <Table.Cell>Location</Table.Cell>
-              <Table.Cell>Status</Table.Cell>
-              <Table.Cell>Actions</Table.Cell>
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
+
+        {/* Device List */}
+        {devices.length === 0 ? (
+          <p className="text-gray-500 text-center">No devices yet. Add your first security device above.</p>
+        ) : (
+          <ul className="space-y-3">
             {devices.map(device => (
-              <Table.Row key={device.id}>
-                <Table.Cell>{device.name}</Table.Cell>
-                <Table.Cell>{device.location}</Table.Cell>
-                <Table.Cell>
-                  <span className={`text-${device.status === 'online' ? 'green' : 'red'}`}>{device.status}</span>
-                </Table.Cell>
-                <Table.Cell>
-                  <Button variant="outline" size="sm" onClick={() => handleDeleteDevice(device.id)}>
+              <li key={device.id} className="border rounded-lg p-3 flex justify-between items-center">
+                <div>
+                  <div className="font-medium">{device.name}</div>
+                  <div className="text-sm text-gray-500">{device.location}</div>
+                  <div className={`text-xs ${device.status === 'online' ? 'text-green-600' : 'text-red-600'}`}>
+                    {device.status === 'online' ? '● Online' : '○ Offline'}
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => toggleDeviceStatus(device.id)}
+                    className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
+                  >
+                    {device.status === 'online' ? 'Disarm' : 'Arm'}
+                  </button>
+                  <button
+                    onClick={() => deleteDevice(device.id)}
+                    className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
+                  >
                     Delete
-                  </Button>
-                </Table.Cell>
-              </Table.Row>
+                  </button>
+                </div>
+              </li>
             ))}
-          </Table.Body>
-        </Table>
-      </Card>
+          </ul>
+        )}
+
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="mt-6 w-full bg-gray-200 text-gray-800 py-2 rounded-lg"
+        >
+          ← Back to Dashboard
+        </button>
+      </div>
     </div>
   );
 }
