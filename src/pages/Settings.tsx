@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useVoice } from '../context/VoiceContext';
+import { UpgradeButton } from '../components/UpgradeButton';
 
 export default function Settings() {
   const { isVoiceActive, toggleVoice, codeWord, setCodeWord, repetitions, setRepetitions, testVoice } = useVoice();
@@ -30,14 +31,14 @@ export default function Settings() {
   };
 
   const handleSaveSettings = () => {
-    if (isVoiceActive && localCodeWord) {
+    if (isVoiceActive && localCodeWord && localCodeWord === confirmCodeWord) {
       localStorage.setItem('voiceCodeWord', localCodeWord);
       localStorage.setItem('voiceRepetitions', localRepetitions.toString());
       setCodeWord(localCodeWord);
       setRepetitions(localRepetitions);
       alert('Voice settings saved successfully!');
     } else {
-      alert('Please activate voice and set a code word first');
+      alert('Please activate voice, set a matching code word, and confirm it');
     }
   };
 
@@ -47,6 +48,7 @@ export default function Settings() {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Settings</h2>
 
         <div className="space-y-4">
+          {/* Voice Activation */}
           <div className="flex justify-between items-center">
             <span className="text-gray-700">Voice Activation</span>
             <button
@@ -120,6 +122,18 @@ export default function Settings() {
               </p>
             </div>
           )}
+
+          {/* UPGRADE SECTION */}
+          <div className="mt-6 p-4 border rounded-lg border-red-200 bg-red-50">
+            <h3 className="text-lg font-semibold text-red-800">ResQMe Pro</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Get unlimited voice SOS, provider linking, and multi‑device security.
+            </p>
+            <div className="flex gap-3">
+              <UpgradeButton priceId="price_1TWe4IE9PorKZfeqk02yhUOn" buttonText="Upgrade Monthly" />
+              <UpgradeButton priceId="price_1TWe66E9PorKZfeqoHsbCJ9l" buttonText="Upgrade Yearly" variant="outline" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
