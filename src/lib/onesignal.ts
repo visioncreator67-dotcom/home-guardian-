@@ -49,11 +49,29 @@ export const sendExternalUserId = (userId: string) => {
 };
 
 export const requestNotificationPermission = () => {
+  // If OneSignal is already initialized, show the prompt
   if (window.OneSignal && window.OneSignal.initialized) {
     window.OneSignal.push(() => {
       window.OneSignal.showSlidedownPrompt();
     });
-  } else {
-    alert('OneSignal is still loading, please wait a moment and try again.');
+    return;
   }
+
+  // Otherwise, wait for it to become ready
+  console.log('Waiting for OneSignal to initialize...');
+  const interval = setInterval(() => {
+    if (window.OneSignal && window.OneSignal.initialized) {
+      clearInterval(interval);
+      console.log('OneSignal ready, showing prompt');
+      window.OneSignal.push(() => {
+        window.OneSignal.showSlidedownPrompt();
+      });
+    }
+  }, 500);
+
+  // Timeout after 10 seconds to avoid infinite waiting
+  setTimeout(() => {
+    clearInterval(interval);
+    alert('OneSignal is taking too long. Please refresh the page and try again.');
+  }, 10000);
 };
