@@ -13,6 +13,7 @@ import Signup from './pages/Signup';
 import NotFound from './pages/NotFound';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import PaymentPage from './pages/PaymentPage';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<any>(null);
@@ -74,7 +75,9 @@ function App() {
         {/* Add these two lines */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="*" element={<NotFound />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+                <Route path="/payment" element={<PaymentPage />} />
+                <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
