@@ -57,22 +57,19 @@ export default function Devices() {
         {/* Add Device Form */}
         <div className="mb-6 border-b pb-4">
           <h3 className="text-lg font-semibold mb-2">Add New Device</h3>
-          <input
-            type="text"
+          <input            type="text"
             placeholder="Device name (e.g., Kitchen Sensor)"
             value={newDeviceName}
             onChange={(e) => setNewDeviceName(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2"
           />
-          <select
-            value={newDeviceLocation}
+          <select            value={newDeviceLocation}
             onChange={(e) => setNewDeviceLocation(e.target.value)}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2"
           >
             {LOCATIONS.map(loc => <option key={loc} value={loc}>{loc}</option>)}
           </select>
-          <button
-            onClick={addDevice}
+          <button            onClick={addDevice}
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
           >
             ➕ Add Device
@@ -100,8 +97,7 @@ export default function Devices() {
                   >
                     {device.status === 'online' ? 'Disarm' : 'Arm'}
                   </button>
-                  <button
-                    onClick={() => deleteDevice(device.id)}
+                  <button                    onClick={() => deleteDevice(device.id)}
                     className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
                   >
                     Delete
@@ -112,12 +108,12 @@ export default function Devices() {
           </ul>
         )}
 
-        <button
+        <Button
           onClick={() => navigate('/dashboard')}
           className="mt-6 w-full bg-gray-200 text-gray-800 py-2 rounded-lg"
         >
           ← Back to Dashboard
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -1,19 +1,99 @@
-import React from 'react';
+"use client";
 
-interface SwitchProps {
-  checked: boolean;
-  onChange: () => void;
+import * as React from "react";
+
+interface SwitchProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  /** Optional CSS class applied to the root element */
   className?: string;
+  /** Optional style object applied to the root element */
+  style?: React.CSSProperties;
 }
 
-export const Switch: React.FC<SwitchProps> = ({ checked, onChange, className = '' }) => (
-  <button
-    type="button"
-    role="switch"
-    aria-checked={checked}
-    onClick={onChange}
-    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 ${checked ? 'bg-red-600' : 'bg-gray-300'} ${className}`}
-  >
-    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${checked ? 'translate-x-6' : 'translate-x-1'}`} />
-  </button>
-);
+/**
+ * A simple Switch component based on the headless UI Switch pattern.
+ * The visual styling is done with Tailwind classes.
+ */
+export default function Switch({ className, style, ...props }: SwitchProps) {
+  // Extract the checked state from the input
+  const checked = props.checked || false;
+
+  // We render a hidden checkbox and a label that styles the toggle
+  return (
+    <label
+      className={`
+        inline-flex items-center         ${
+          checked
+            ? "bg-red-600 border-red-600"
+            : "bg-gray-300 border-gray-300"
+        } 
+        rounded-full 
+        transition-colors 
+        ${
+          checked
+            ? "shadow-red-600"
+            : "shadow-gray-500"
+        } 
+        ${
+          props.disabled            ? "opacity-50 cursor-not-allowed"
+            : "cursor-pointer"
+        } 
+        ${
+          props.className        }`}
+      ${
+        checked
+          ? "flex items-center"
+          : "items-center"
+      }">
+      {/* Hidden checkbox */}
+      <input
+        type="checkbox"
+        {...props}
+        className="sr-only"
+      />
+      {/* The slider */}
+      <span
+        className={`
+          flex items-center 
+          w-11 h-5 
+          rounded-full 
+          transition-colors 
+          ${
+            checked
+              ? "bg-white"
+              : "bg-gray-200"
+          } 
+          shadow-sm 
+          ${
+            props.disabled
+              ? "opacity-50"
+              : "border border-gray-400"
+          } 
+          ${
+            props.className
+          }`}
+      >
+        {/* The thumb */}
+        <span
+          className={`
+            block 
+            w-4 h-4 
+            rounded-full 
+            bg-white 
+            transition-transform 
+            ${
+              checked
+                ? "translate-x-5"
+                : "translate-x-1"
+            } 
+            shadow-sm             ${
+              props.disabled
+                ? "opacity-30"
+                : ""
+            } 
+            ${
+              props.className            }`}
+        />
+      </span>
+    </label>
+  );
+}

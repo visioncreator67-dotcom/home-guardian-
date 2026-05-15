@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import { Button, Card, Select, Input } from '../components/ui';
 
 interface Provider {
   id: string;
@@ -20,15 +21,13 @@ export default function LinkProvider() {
   const navigate = useNavigate();
   const [providers, setProviders] = useState<Provider[]>([]);
   const [linkedProviders, setLinkedProviders] = useState<UserProvider[]>([]);
-  const [selectedProvider, setSelectedProvider] = useState('');
+  const [selectedProvider, setSelectedProvider] = useState(''); // Added state
   const [accountNumber, setAccountNumber] = useState('');
   const [loading, setLoading] = useState(false);
-  const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
-      setFetching(true);
-
+      setLoading(true);
       const { data: providersData, error: providersError } = await supabase
         .from('security_providers')
         .select('id, name, country, emergency_phone')
@@ -53,10 +52,8 @@ export default function LinkProvider() {
           setLinkedProviders(userProviders || []);
         }
       }
-
-      setFetching(false);
+      setLoading(false);
     };
-
     fetchData();
   }, []);
 
@@ -93,7 +90,7 @@ export default function LinkProvider() {
     setLoading(false);
   };
 
-  if (fetching) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <p>Loading providers...</p>
@@ -110,7 +107,7 @@ export default function LinkProvider() {
         </p>
 
         <label className="block text-sm font-medium mb-1">Select Provider</label>
-        <select
+        <Select
           value={selectedProvider}
           onChange={(e) => setSelectedProvider(e.target.value)}
           className="w-full border rounded-lg p-2 mb-4"
@@ -118,45 +115,50 @@ export default function LinkProvider() {
           <option value="">-- Choose --</option>
           {providers.map(p => (
             <option key={p.id} value={p.id}>{p.name} ({p.country})</option>
-          ))}
-        </select>
+          ))}  
+        </Select>
 
         <label className="block text-sm font-medium mb-1">Your Account Number</label>
-        <input
-          type="text"
+        <Input          type="text"
           value={accountNumber}
           onChange={(e) => setAccountNumber(e.target.value)}
           placeholder="e.g., 123456"
           className="w-full border rounded-lg p-2 mb-4"
         />
 
-        <button
+        <Button
           onClick={handleLink}
           disabled={loading || !selectedProvider || !accountNumber}
           className="w-full bg-blue-600 text-white py-2 rounded-lg disabled:opacity-50"
         >
           {loading ? 'Linking...' : 'Link Provider'}
-        </button>
+        </Button>
 
         {linkedProviders.length > 0 && (
           <div className="mt-6">
             <h3 className="font-semibold mb-2">Linked Providers:</h3>
             <ul className="space-y-1">
               {linkedProviders.map(lp => (
-                <li key={lp.id} className="text-sm">
+                <li key={lp.id} className="text-sm flex justify-between items-center">
                   ✓ {lp.provider.name} (Account: {lp.account_number})
+                  <button
+                    onClick={() => {
+                      // delete logic would go here                    }}
+                    className="ml-2 text-xs text-red-500 hover:text-red-700"
+                  >
+                    Delete                  </button>
                 </li>
               ))}
             </ul>
           </div>
         )}
 
-        <button
+        <Button
           onClick={() => navigate('/dashboard')}
           className="mt-6 w-full bg-gray-200 text-gray-800 py-2 rounded-lg"
         >
           ← Back to Dashboard
-        </button>
+        </Button>
       </div>
     </div>
   );

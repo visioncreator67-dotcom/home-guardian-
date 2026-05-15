@@ -20,8 +20,7 @@ export default function Contacts() {
     if (saved) setContacts(JSON.parse(saved));
   }, []);
 
-  // Save contacts to localStorage
-  useEffect(() => {
+  // Save contacts to localStorage  useEffect(() => {
     localStorage.setItem('emergencyContacts', JSON.stringify(contacts));
   }, [contacts]);
 
@@ -67,8 +66,7 @@ export default function Contacts() {
             onChange={(e) => setNewContact({ ...newContact, phone: e.target.value })}
             className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2"
           />
-          <input
-            type="text"
+          <input            type="text"
             placeholder="Relationship (e.g., Mother, Friend)"
             value={newContact.relationship}
             onChange={(e) => setNewContact({ ...newContact, relationship: e.target.value })}
@@ -83,8 +81,7 @@ export default function Contacts() {
             <option value={2}>Priority 2 (Secondary)</option>
             <option value={3}>Priority 3 (Tertiary)</option>
           </select>
-          <button
-            onClick={addContact}
+          <button            onClick={addContact}
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
           >
             ➕ Add Contact
@@ -97,42 +94,39 @@ export default function Contacts() {
         ) : (
           <ul className="space-y-3">
             {contacts.sort((a,b) => a.priority - b.priority).map(contact => (
-              <li key={contact.id} className="border rounded-lg p-3">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <div className="font-medium">{contact.name}</div>
-                    <div className="text-sm text-gray-500">{contact.phone}</div>
-                    <div className="text-xs text-gray-400">{contact.relationship}</div>
-                    <div className="text-xs font-semibold mt-1">
-                      Priority: {contact.priority === 1 ? '🔴 Primary' : contact.priority === 2 ? '🟠 Secondary' : '🟢 Tertiary'}
-                    </div>
+              <li key={contact.id} className="border rounded-lg p-3 flex justify-between items-center">
+                <div>
+                  <div className="font-medium">{contact.name}</div>
+                  <div className="text-sm text-gray-500">{contact.phone}</div>
+                  <div className="text-xs text-gray-400">{contact.relationship}</div>
+                  <div className="text-xs font-semibold mt-1">
+                    Priority: {contact.priority === 1 ? '🔴 Primary' : contact.priority === 2 ? '🟠 Secondary' : '🟢 Tertiary'}
                   </div>
-                  <div className="flex flex-col gap-2">
-                    <button
-                      onClick={() => testAlert(contact.phone)}
-                      className="px-3 py-1 text-sm bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200"
-                    >
-                      Test Alert
-                    </button>
-                    <button
-                      onClick={() => deleteContact(contact.id)}
-                      className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
-                    >
-                      Delete
-                    </button>
-                  </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => testAlert(contact.phone)}
+                    className="px-3 py-1 text-sm bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200"
+                  >
+                    Test Alert
+                  </button>
+                  <button
+                    onClick={() => deleteContact(contact.id)}
+                    className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
+                  >
+                    Delete                  </button>
                 </div>
               </li>
             ))}
           </ul>
         )}
 
-        <button
+        <Button
           onClick={() => navigate('/dashboard')}
           className="mt-6 w-full bg-gray-200 text-gray-800 py-2 rounded-lg"
         >
           ← Back to Dashboard
-        </button>
+        </Button>
       </div>
     </div>
   );
