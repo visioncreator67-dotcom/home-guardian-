@@ -12,11 +12,9 @@ export default function ForgotPassword() {
     e.preventDefault();
     setLoading(true);
     setMessage('');
-
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: 'https://home-guardian.pages.dev/reset-password',
     });
-
     if (error) {
       setMessage(error.message);
     } else {
@@ -31,30 +29,12 @@ export default function ForgotPassword() {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Reset Password</h2>
         {message && <div className="bg-blue-100 text-blue-800 p-3 rounded mb-4">{message}</div>}
         <form onSubmit={handleReset}>
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Email address</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 disabled:opacity-50"
-          >
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email" className="w-full border rounded-lg p-2 mb-4" required />
+          <button type="submit" disabled={loading} className="w-full bg-red-600 text-white py-2 rounded-lg">
             {loading ? 'Sending...' : 'Send reset link'}
           </button>
         </form>
-        <button
-          onClick={() => navigate('/login')}
-          className="mt-4 w-full text-gray-600 hover:underline text-sm"
-        >
-          Back to login
-        </button>
+        <button onClick={() => navigate('/login')} className="mt-4 w-full text-gray-600 hover:underline text-sm">Back to login</button>
       </div>
     </div>
   );

@@ -63,8 +63,9 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <VoiceListener />
       <VoiceStatus isListening={isListening} />
-      <Card className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
-        <Card.Header>
+     <Card className="w-full max-w-md mx-auto bg-white rounded-2xl shadow-xl p-6">
+  {/* existing content */}
+</Card>
           <div className="text-center">
             <div className="text-6xl mb-4">🇿🇦</div>
             <h1 className="text-3xl font-bold text-gray-800">Home Dashboard</h1>
