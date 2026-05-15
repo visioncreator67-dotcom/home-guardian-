@@ -62,7 +62,6 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Forgot password link */}
         <p className="text-center text-sm text-gray-600 mt-4">
           <button
             onClick={() => navigate('/forgot-password')}
