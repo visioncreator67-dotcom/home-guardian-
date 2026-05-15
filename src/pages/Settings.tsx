@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useVoice } from '../context/VoiceContext';
 import { UpgradeButton } from '../components/UpgradeButton';
-import { Switch } from '../components/ui/switch';
 
 export default function Settings() {
   const { isVoiceActive, toggleVoice, codeWord, setCodeWord, repetitions, setRepetitions, testVoice } = useVoice();
@@ -49,14 +48,15 @@ export default function Settings() {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Settings</h2>
 
         <div className="space-y-4">
-          {/* Voice Activation */}
+          {/* Voice Activation Toggle */}
           <div className="flex justify-between items-center">
             <span className="text-gray-700">Voice Activation</span>
-            <Switch              checked={isVoiceActive}
-              onChange={toggleVoice}
-              className="w-12 h-6 bg-gray-300 rounded-full transition-colors"
-              style={{ backgroundColor: isVoiceActive ? '#DC2626' : '#6B7280' }}
-            />
+            <button
+              onClick={toggleVoice}
+              className={`w-12 h-6 rounded-full transition-colors ${isVoiceActive ? 'bg-red-600' : 'bg-gray-300'}`}
+            >
+              <span className={`block w-5 h-5 bg-white rounded-full transition-transform ${isVoiceActive ? 'translate-x-6' : 'translate-x-1'}`} />
+            </button>
           </div>
           <p className="text-sm text-gray-500 text-center">
             {isVoiceActive ? 'Voice Activation: ON' : 'Voice Activation: OFF'}
@@ -64,54 +64,54 @@ export default function Settings() {
 
           {isVoiceActive && (
             <>
-              <div className="border rounded-lg p-4 bg-gray-50 mb-4">
-                <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Secret Code Word</label>
-                  <input
-                    type="text"
-                    value={localCodeWord}
-                    onChange={(e) => setLocalCodeWord(e.target.value)}
-                    placeholder="e.g., pineapple"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2"
-                  />
-                  <input
-                    type="text"
-                    value={confirmCodeWord}
-                    onChange={(e) => setConfirmCodeWord(e.target.value)}
-                    placeholder="Confirm code word"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                  />
-                  {localCodeWord && confirmCodeWord && localCodeWord !== confirmCodeWord && (
-                    <p className="text-xs text-red-500 mt-1">Code words do not match</p>
-                  )}
-                </div>
-
-                <div className="mb-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Number of Repetitions</label>
-                  <select                    value={localRepetitions}
-                    onChange={(e) => setLocalRepetitions(Number(e.target.value))}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2"
-                  >
-                    <option value={2}>2 times</option>
-                    <option value={3}>3 times</option>
-                  </select>
-                </div>
-
-                <button
-                  onClick={handleTestVoice}
-                  disabled={!localCodeWord}
-                  className="w-full bg-gray-200 text-gray-800 py-2 rounded-lg mt-2 disabled:opacity-50"
-                >
-                  Test Voice Detection
-                </button>
-
-                <button                  onClick={handleSaveSettings}
-                  disabled={!localCodeWord || localCodeWord !== confirmCodeWord}
-                  className="w-full bg-blue-600 text-white py-2 rounded-lg disabled:opacity-50"
-                >
-                  Save Settings
-                </button>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Secret Code Word</label>
+                <input
+                  type="text"
+                  value={localCodeWord}
+                  onChange={(e) => setLocalCodeWord(e.target.value)}
+                  placeholder="e.g., pineapple"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 mb-2"
+                />
+                <input
+                  type="text"
+                  value={confirmCodeWord}
+                  onChange={(e) => setConfirmCodeWord(e.target.value)}
+                  placeholder="Confirm code word"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                />
+                {localCodeWord && confirmCodeWord && localCodeWord !== confirmCodeWord && (
+                  <p className="text-xs text-red-500 mt-1">Code words do not match</p>
+                )}
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Number of Repetitions</label>
+                <select
+                  value={localRepetitions}
+                  onChange={(e) => setLocalRepetitions(Number(e.target.value))}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2"
+                >
+                  <option value={2}>2 times</option>
+                  <option value={3}>3 times</option>
+                </select>
+              </div>
+
+              <button
+                onClick={handleTestVoice}
+                disabled={!localCodeWord}
+                className="w-full bg-gray-200 text-gray-800 py-2 rounded-lg mt-2 disabled:opacity-50"
+              >
+                Test Voice Detection
+              </button>
+
+              <button
+                onClick={handleSaveSettings}
+                disabled={!localCodeWord || localCodeWord !== confirmCodeWord}
+                className="w-full bg-blue-600 text-white py-2 rounded-lg disabled:opacity-50"
+              >
+                Save Settings
+              </button>
             </>
           )}
 
@@ -123,15 +123,24 @@ export default function Settings() {
             </div>
           )}
 
-          {/* UPGRADE SECTION */}
+          {/* UPGRADE SECTION – Pro & Premier */}
           <div className="mt-6 p-4 border rounded-lg border-red-200 bg-red-50">
-            <h3 className="text-lg font-semibold text-red-800 mb-2">ResQMe Pro</h3>
+            <h3 className="text-lg font-semibold text-red-800">ResQMe Pro</h3>
             <p className="text-sm text-gray-600 mb-4">
-              Get unlimited voice SOS, provider linking, and multi‑device security.
+              Voice safe word, unlimited contacts, audio recording.
+            </p>
+            <div className="flex gap-3 mb-4">
+              <UpgradeButton priceId="price_1TWe4IE9PorKZfeqk02yhUOn" buttonText="Pro Monthly" />
+              <UpgradeButton priceId="price_1TWe66E9PorKZfeqoHsbCJ9l" buttonText="Pro Yearly" variant="outline" />
+            </div>
+
+            <h3 className="text-lg font-semibold text-red-800 mt-4">ResQMe Premier</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Everything in Pro, plus multi‑device security network and provider linking.
             </p>
             <div className="flex gap-3">
-              <UpgradeButton priceId="price_1TWe4IE9PorKZfeqk02yhUOn" buttonText="Upgrade Monthly" />
-              <UpgradeButton priceId="price_1TWe66E9PorKZfeqoHsbCJ9l" buttonText="Upgrade Yearly" variant="outline" />
+              <UpgradeButton priceId="price_1TXAceE9PorKZfeqt5aLjhbC" buttonText="Premier Monthly" />
+              <UpgradeButton priceId="price_1TXAexE9PorKZfeqFswQKDgH" buttonText="Premier Yearly" variant="outline" />
             </div>
           </div>
         </div>
