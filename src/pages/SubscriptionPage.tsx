@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button, Card, Select } from '../components/ui';
 import { translations } from '../translations';
 import { pricingData } from '../config/pricingConfig';
@@ -10,6 +10,7 @@ export default function SubscriptionPage() {
   const navigate = useNavigate();
   const [country, setCountry] = useState<string>('ZA');
   const [selectedPlan, setSelectedPlan] = useState<string>('');
+  const [searchParams] = useSearchParams();
 
   const currentPricing = pricingData.find(p => p.country === country) || pricingData.find(p => p.country === 'USA');
 
@@ -20,6 +21,36 @@ export default function SubscriptionPage() {
 
   const handlePlanSelect = (plan: string) => {
     setSelectedPlan(plan);
+  };
+
+  const queryParams = new URLSearchParams(searchParams.toString());
+  const amount = queryParams.get('amount') ? parseFloat(queryParams.get('amount')!) : 10;
+
+  const handleSubmit = () => {
+    if (!selectedPlan) return;
+    
+    // Determine amount based on selected plan
+    const selectedPricing = currentPricing;
+    let amountValue = 0;
+    switch (selectedPlan) {
+      case 'proMonthly':
+        amountValue = selectedPricing.plans.proMonthly;
+        break;
+      case 'proYearly':
+        amountValue = selectedPricing.plans.proYearly;
+        break;
+      case 'premierMonthly':
+        amountValue = selectedPricing.plans.premierMonthly;
+        break;
+      case 'premierYearly':
+        amountValue = selectedPricing.plans.premierYearly;
+        break;
+      default:
+        amountValue = 10;
+    }
+    
+    queryParams.set('amount', amountValue.toString());
+    navigate(`/payment?${queryParams.toString()}`);
   };
 
   return (
@@ -54,10 +85,10 @@ export default function SubscriptionPage() {
               placeholder={t('plan')}
               onChange={handlePlanSelect}
               options={[
-                { value: 'proMonthly', label: `${currentPricing.symbol}${currentPricing.plans.proMonthly.toFixed(2)}/month` },
-                { value: 'proYearly', label: `${currentPricing.symbol}${currentPricing.plans.proYearly.toFixed(2)}/year` },
-                { value: 'premierMonthly', label: `${currentPricing.symbol}${currentPricing.plans.premierMonthly.toFixed(2)}/month` },
-                { value: 'premierYearly', label: `${currentPricing.symbol}${currentPricing.plans.premierYearly.toFixed(2)}/year` }
+                { value: 'proMonthly', label: `${currentPricing.symbol}${selectedPlan === 'proMonthly' ? currentPricing.plans.proMonthly.toFixed(2) : ''}/month` },
+                { value: 'proYearly', label: `${currentPricing.symbol}${selectedPlan === 'proYearly' ? currentPricing.plans.proYearly.toFixed(2) : ''}/year` },
+                { value: 'premierMonthly', label: `${currentPricing.symbol}${selectedPlan === 'premierMonthly' ? currentPricing.plans.premierMonthly.toFixed(2) : ''}/month` },
+                { value: 'premierYearly', label: `${currentPricing.symbol}${selectedPlan === 'premierYearly' ? currentPricing.plans.premierYearly.toFixed(2) : ''}/year` }
               ]}
               value={selectedPlan}
               className="w-full mb-4"
@@ -68,10 +99,7 @@ export default function SubscriptionPage() {
             variant="solid"
             color="red"
             size="lg"
-            onClick={() => {
-              if (!selectedPlan) return;
-              navigate(`/payment?plan=${selectedPlan}&country=${country}`);
-            }}
+            onClick={handleSubmit}
             className="w-full"
           >
             {t('continue')}

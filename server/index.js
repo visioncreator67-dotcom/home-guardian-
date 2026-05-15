@@ -28,7 +28,7 @@ app.post('/api/create-payment-intent', async (req, res) => {
   }
 });
 
-// Create Subscription
+// Create Subscription Checkout Session
 app.post('/api/create-subscription', async (req, res) => {
   try {
     const { priceId } = req.body;
