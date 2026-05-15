@@ -18,11 +18,17 @@ const PaymentPage = () => {
 
   const handleError = (error: any) => {
     console.error('Payment failed:', error);
-    // Show error message to user
+    // You could show a toast or alert here
   };
 
-  const label = plan.includes('Yearly') ? 'Annual Subscription' : 
-                plan.includes('Monthly') ? 'Monthly Subscription' : 'Complete Payment';
+  // Determine if this is a subscription based on presence of a priceId
+  const isSubscription = Boolean(priceId);
+
+  const label = isSubscription
+    ? plan.includes('Yearly')
+      ? 'Annual Subscription'
+      : 'Monthly Subscription'
+    : 'Complete Payment';
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -31,13 +37,13 @@ const PaymentPage = () => {
         <StripePaymentForm
           amount={amount}
           label={label}
-          planType={plan === 'one-time' ? 'one-time' : 'subscription'}
+          planType={isSubscription ? 'subscription' : 'one-time'}
           priceId={priceId}
           onSuccess={handleSuccess}
           onError={handleError}
         />
         <div className="mt-4 text-center">
-          <button 
+          <button
             onClick={() => navigate('/subscription')}
             className="text-indigo-600 hover:text-indigo-700 text-sm"
           >

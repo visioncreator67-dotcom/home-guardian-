@@ -24,32 +24,19 @@ export default function SubscriptionPage() {
   };
 
   const queryParams = new URLSearchParams(searchParams.toString());
-  const amount = queryParams.get('amount') ? parseFloat(queryParams.get('amount')!) : 10;
 
   const handleSubmit = () => {
     if (!selectedPlan) return;
-    
-    // Determine amount based on selected plan
-    const selectedPricing = currentPricing;
-    let amountValue = 0;
-    switch (selectedPlan) {
-      case 'proMonthly':
-        amountValue = selectedPricing.plans.proMonthly;
-        break;
-      case 'proYearly':
-        amountValue = selectedPricing.plans.proYearly;
-        break;
-      case 'premierMonthly':
-        amountValue = selectedPricing.plans.premierMonthly;
-        break;
-      case 'premierYearly':
-        amountValue = selectedPricing.plans.premierYearly;
-        break;
-      default:
-        amountValue = 10;
-    }
-    
+
+    // Determine amount and priceId based on selected plan
+    const planKey = selectedPlan as keyof typeof currentPricing.plans;
+    const amountValue = currentPricing.plans[planKey];
+    const priceId = currentPricing.stripePriceIds[planKey as keyof typeof currentPricing.stripePriceIds];
+
     queryParams.set('amount', amountValue.toString());
+    if (priceId) queryParams.set('priceId', priceId);
+    queryParams.set('plan', selectedPlan); // keep plan name for UI
+
     navigate(`/payment?${queryParams.toString()}`);
   };
 
@@ -85,10 +72,22 @@ export default function SubscriptionPage() {
               placeholder={t('plan')}
               onChange={handlePlanSelect}
               options={[
-                { value: 'proMonthly', label: `${currentPricing.symbol}${selectedPlan === 'proMonthly' ? currentPricing.plans.proMonthly.toFixed(2) : ''}/month` },
-                { value: 'proYearly', label: `${currentPricing.symbol}${selectedPlan === 'proYearly' ? currentPricing.plans.proYearly.toFixed(2) : ''}/year` },
-                { value: 'premierMonthly', label: `${currentPricing.symbol}${selectedPlan === 'premierMonthly' ? currentPricing.plans.premierMonthly.toFixed(2) : ''}/month` },
-                { value: 'premierYearly', label: `${currentPricing.symbol}${selectedPlan === 'premierYearly' ? currentPricing.plans.premierYearly.toFixed(2) : ''}/year` }
+                {
+                  value: 'proMonthly',
+                  label: `${currentPricing.symbol}${currentPricing.plans.proMonthly.toFixed(2)}/month`
+                },
+                {
+                  value: 'proYearly',
+                  label: `${currentPricing.symbol}${currentPricing.plans.proYearly.toFixed(2)}/year`
+                },
+                {
+                  value: 'premierMonthly',
+                  label: `${currentPricing.symbol}${currentPricing.plans.premierMonthly.toFixed(2)}/month`
+                },
+                {
+                  value: 'premierYearly',
+                  label: `${currentPricing.symbol}${currentPricing.plans.premierYearly.toFixed(2)}/year`
+                }
               ]}
               value={selectedPlan}
               className="w-full mb-4"
